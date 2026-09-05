@@ -1,73 +1,85 @@
-# Welcome to your Lovable project
+# The Sunk Ride
 
-## Project info
+**English** | [中文](README.zh-CN.md)
 
-**URL**: https://lovable.dev/projects/37843675-d082-42c9-b594-27d05b7b3e36
+A behavioral-economics simulator of **shared-bike** choices. The on-screen title is「共享单车实验模拟器」: twenty days of weather, distance, luggage, and time pressure, used to study **overconfidence**, **payment-plan rationality**, and the **sunk-cost effect**.
 
-## How can I edit this code?
+*The Sunk Ride* names the trap the experiment is built around: a prepaid package that is already spent, yet still pulls you onto the bike.
 
-There are several ways of editing your application.
+Repository: <https://github.com/Lynnyyang/The-Sunk-Ride>
 
-**Use Lovable**
+---
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/37843675-d082-42c9-b594-27d05b7b3e36) and start prompting.
+## What this is
 
-Changes made via Lovable will be committed automatically to this repo.
+A client-only web app. You set a participant and group, then generate **20 days** of ride / no-ride decisions from a logistic-style probability. Results include a summary (predicted rides \(E\) vs actual rides, overconfidence \(E-A\), tokens, cash payoff) and a day-by-day table that can be exported as CSV.
 
-**Use your preferred IDE**
+This is **simulated** data for teaching and design, not field observations.
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+---
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+## Design in brief
 
-Follow these steps:
+| Item | Value |
+| --- | --- |
+| Package (plan A) | 15 tokens |
+| Pay-per-ride (plan B) | 1 token per ride |
+| Starting endowment | 30 tokens |
+| Token-to-cash | 0.5 |
+| Break-even | 15 rides |
+| Days | 20 scenarios (shuffled) |
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+**Groups**
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+1. Standard package — sunk cost is *not* shown each ride (“this ride is free”).
+2. Cost-visible package — each ride shows the amortized sunk cost \(15/E\).
+3. Control — pay-per-ride only (plan B).
 
-# Step 3: Install the necessary dependencies.
-npm i
+**Hypotheses on the home page:** H1 overconfidence; H2 purchase rationality; H3/H4 sunk cost.
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
+Ride probability starts from \(E/20\), then weather, long distance, time pressure, heavy luggage, and a sunk-cost factor (plan A, groups 1–2) shift it.
+
+---
+
+## Stack
+
+Vite 5, TypeScript, React 18, Tailwind CSS, shadcn/ui. Dev server port **8080**.
+
+---
+
+## Run locally
+
+```bash
+git clone https://github.com/Lynnyyang/The-Sunk-Ride.git
+cd The-Sunk-Ride
+npm install
 npm run dev
 ```
 
-**Edit a file directly in GitHub**
+```bash
+npm run build
+npm run preview
+npm run lint
+```
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+No backend, no API keys.
 
-**Use GitHub Codespaces**
+---
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+## Layout
 
-## What technologies are used for this project?
+```
+src/
+  pages/Index.tsx
+  components/SimulationForm.tsx
+  components/ResultsDisplay.tsx
+  lib/experimentData.ts      # 20 scenarios, prices
+  lib/simulationEngine.ts    # ride probability and payoffs
+  types/experiment.ts
+```
 
-This project is built with:
+---
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+## License
 
-## How can I deploy this project?
-
-Simply open [Lovable](https://lovable.dev/projects/37843675-d082-42c9-b594-27d05b7b3e36) and click on Share -> Publish.
-
-## Can I connect a custom domain to my Lovable project?
-
-Yes, you can!
-
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+[MIT](LICENSE)
